@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体温入力フォーム</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em; /* フォントサイズを大きく */
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        form, .memo {
+            background-color: #f9f9f9;
+            padding: 30px; /* パディングを大きく */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px; /* 幅を広く */
+            text-align: center;
+            margin: 10px;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 15px; /* パディングを大きく */
+            margin: 10px 0;
+            box-sizing: border-box;
+            font-size: 1.2em; /* フォントサイズを大きく */
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px; /* パディングを大きく */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em; /* フォントサイズを大きく */
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em; /* フォントサイズを大きく */
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>体温を入力してください</h1>
+    <div class="container">
+        <form id="temperatureForm">
+            <label for="temperature">体温 (℃):</label>
+            <input type="number" id="temperature" name="temperature" step="0.1" min="35" max="40" required>
+            <input type="submit" value="送信">
+        </form>
+        <div class="memo">
+            <label for="condition">体調の評価:</label>
+            <select id="condition" name="condition">
+                <option value="良好">良好</option>
+                <option value="やや良好">やや良好</option>
+                <option value="普通">普通</option>
+                <option value="やや不調">やや不調</option>
+                <option value="不調">不調</option>
+            </select>
+        </div>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('temperatureForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const temperature = document.getElementById('temperature').value;
+            const condition = document.getElementById('condition').value;
+            document.getElementById('result').innerText = `本日の体温は ${temperature}℃ です。体調の評価は「${condition}」です。`;
+        });
+    </script>
+</body>
+</html>
