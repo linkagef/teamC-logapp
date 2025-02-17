@@ -64,6 +64,13 @@
         input[type="submit"]:hover {
             background-color: #4cae4c;
         }
+        .log-entry {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
     </style>
 </head>
 <body>
@@ -84,20 +91,29 @@
         </form>
 
         <h2>睡眠時間</h2>
-        <p id="sleep-time">ここに睡眠時間が表示されます</p>
+        <div id="sleep-log">
+            <!-- ここに睡眠時間のログが表示されます -->
+        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const sleepForm = document.getElementById('sleep-form');
+            const sleepLog = document.getElementById('sleep-log');
+
             sleepForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const sleepDate = document.getElementById('sleep-date').value;
                 const sleepStart = document.getElementById('sleep-start').value;
                 const sleepEnd = document.getElementById('sleep-end').value;
 
-                const sleepTimeElement = document.getElementById('sleep-time');
-                sleepTimeElement.textContent = `日付: ${sleepDate}, 就寝時間: ${sleepStart}, 起床時間: ${sleepEnd}`;
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.textContent = `日付: ${sleepDate}, 就寝時間: ${sleepStart}, 起床時間: ${sleepEnd}`;
+                sleepLog.appendChild(logEntry);
+
+                // フォームをリセット
+                sleepForm.reset();
             });
         });
     </script>
