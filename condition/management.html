@@ -49,19 +49,22 @@
         }
         input[type="time"],
         input[type="date"],
-        input[type="submit"] {
+        input[type="submit"],
+        input[type="button"] {
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        input[type="submit"] {
+        input[type="submit"],
+        input[type="button"] {
             background-color: #5cb85c;
             color: #fff;
             border: none;
             cursor: pointer;
         }
-        input[type="submit"]:hover {
+        input[type="submit"]:hover,
+        input[type="button"]:hover {
             background-color: #4cae4c;
         }
         .log-entry {
@@ -88,6 +91,7 @@
             <input type="time" id="sleep-end" name="sleep-end" required>
 
             <input type="submit" value="ログを保存">
+            <input type="button" value="リセット" id="reset-button">
         </form>
 
         <h2>睡眠時間</h2>
@@ -100,6 +104,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sleepForm = document.getElementById('sleep-form');
             const sleepLog = document.getElementById('sleep-log');
+            const resetButton = document.getElementById('reset-button');
+
+            // ローカルストレージからログを読み込む
+            const savedLogs = JSON.parse(localStorage.getItem('sleepLogs')) || [];
+            savedLogs.forEach(log => {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.textContent = log;
+                sleepLog.appendChild(logEntry);
+            });
 
             sleepForm.addEventListener('submit', function(event) {
                 event.preventDefault();
@@ -112,8 +126,19 @@
                 logEntry.textContent = `日付: ${sleepDate}, 就寝時間: ${sleepStart}, 起床時間: ${sleepEnd}`;
                 sleepLog.appendChild(logEntry);
 
+                // ローカルストレージに保存
+                savedLogs.push(logEntry.textContent);
+                localStorage.setItem('sleepLogs', JSON.stringify(savedLogs));
+
                 // フォームをリセット
                 sleepForm.reset();
+            });
+
+            resetButton.addEventListener('click', function() {
+                // ローカルストレージをクリア
+                localStorage.removeItem('sleepLogs');
+                // 表示されているログをクリア
+                sleepLog.innerHTML = '';
             });
         });
     </script>
