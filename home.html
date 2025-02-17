@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康管理アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #2e8b57;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 50px;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card a {
+            text-decoration: none;
+            color: #2e8b57;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>健康管理アプリ</h1>
+    <div class="container">
+        <div class="card">
+            <a href="/health">体調管理</a>
+        </div>
+        <div class="card">
+            <a href="/journal">日誌</a>
+        </div>
+        <div class="card">
+            <a href="/reflection">振り返り</a>
+        </div>
+    </div>
+</body>
+</html>
