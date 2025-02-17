@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>食事管理ログ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        label {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        select,
+        input[type="submit"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+        .meal-log {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>食事管理ログ</h1>
+        
+        <form id="meal-form">
+            <label for="breakfast">朝食:</label>
+            <select id="breakfast" name="breakfast">
+                <option value="あり">あり</option>
+                <option value="なし">なし</option>
+            </select>
+
+            <label for="lunch">昼食:</label>
+            <select id="lunch" name="lunch">
+                <option value="あり">あり</option>
+                <option value="なし">なし</option>
+            </select>
+
+            <label for="dinner">夕食:</label>
+            <select id="dinner" name="dinner">
+                <option value="あり">あり</option>
+                <option value="なし">なし</option>
+            </select>
+
+            <input type="submit" value="ログを保存">
+        </form>
+
+        <div class="meal-log" id="meal-log">
+            <!-- ここに食事ログが表示されます -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mealForm = document.getElementById('meal-form');
+            mealForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const breakfast = document.getElementById('breakfast').value;
+                const lunch = document.getElementById('lunch').value;
+                const dinner = document.getElementById('dinner').value;
+
+                const mealLogElement = document.getElementById('meal-log');
+                mealLogElement.innerHTML = `
+                    <p>朝食: ${breakfast}</p>
+                    <p>昼食: ${lunch}</p>
+                    <p>夕食: ${dinner}</p>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
