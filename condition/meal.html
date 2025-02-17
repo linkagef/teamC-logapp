@@ -32,23 +32,19 @@
             color: #555;
         }
         select,
-        input[type="date"],
-        input[type="submit"],
-        input[type="button"] {
+        input[type="submit"] {
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        input[type="submit"],
-        input[type="button"] {
+        input[type="submit"] {
             background-color: #5cb85c;
             color: #fff;
             border: none;
             cursor: pointer;
         }
-        input[type="submit"]:hover,
-        input[type="button"]:hover {
+        input[type="submit"]:hover {
             background-color: #4cae4c;
         }
         .meal-log {
@@ -63,6 +59,13 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+        .delete-button {
+            background-color: #d9534f;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #c9302c;
+        }
     </style>
 </head>
 <body>
@@ -70,9 +73,6 @@
         <h1>食事管理ログ</h1>
         
         <form id="meal-form">
-            <label for="meal-date">日付:</label>
-            <input type="date" id="meal-date" name="meal-date" required>
-
             <label for="breakfast">朝食:</label>
             <select id="breakfast" name="breakfast">
                 <option value="あり">あり</option>
@@ -92,7 +92,6 @@
             </select>
 
             <input type="submit" value="ログを保存">
-            <input type="button" value="リセット" id="reset-button">
         </form>
 
         <div class="meal-log" id="meal-log">
@@ -104,47 +103,53 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mealForm = document.getElementById('meal-form');
             const mealLog = document.getElementById('meal-log');
-            const resetButton = document.getElementById('reset-button');
 
             // ローカルストレージからログを読み込む
             const savedLogs = JSON.parse(localStorage.getItem('mealLogs')) || [];
-            savedLogs.forEach(log => {
+            savedLogs.forEach((log, index) => {
                 const logEntry = document.createElement('div');
                 logEntry.className = 'log-entry';
-                logEntry.textContent = log;
+                logEntry.innerHTML = `
+                    ${log}
+                    <button class="delete-button" data-index="${index}">削除</button>
+                `;
                 mealLog.appendChild(logEntry);
             });
 
             mealForm.addEventListener('submit', function(event) {
                 event.preventDefault();
-                const mealDate = document.getElementById('meal-date').value;
                 const breakfast = document.getElementById('breakfast').value;
                 const lunch = document.getElementById('lunch').value;
                 const dinner = document.getElementById('dinner').value;
 
-                if (!mealDate) {
-                    alert('日付を選択してください');
-                    return;
-                }
+                const now = new Date();
+                const mealDate = now.toLocaleDateString('ja-JP');
+                const mealTime = now.toLocaleTimeString('ja-JP');
 
                 const logEntry = document.createElement('div');
                 logEntry.className = 'log-entry';
-                logEntry.textContent = `日付: ${mealDate}, 朝食: ${breakfast}, 昼食: ${lunch}, 夕食: ${dinner}`;
+                const logText = `日付: ${mealDate}, 時間: ${mealTime}, 朝食: ${breakfast}, 昼食: ${lunch}, 夕食: ${dinner}`;
+                logEntry.innerHTML = `
+                    ${logText}
+                    <button class="delete-button" data-index="${savedLogs.length}">削除</button>
+                `;
                 mealLog.appendChild(logEntry);
 
                 // ローカルストレージに保存
-                savedLogs.push(logEntry.textContent);
+                savedLogs.push(logText);
                 localStorage.setItem('mealLogs', JSON.stringify(savedLogs));
 
                 // フォームをリセット
                 mealForm.reset();
             });
 
-            resetButton.addEventListener('click', function() {
-                // ローカルストレージをクリア
-                localStorage.removeItem('mealLogs');
-                // 表示されているログをクリア
-                mealLog.innerHTML = '';
+            mealLog.addEventListener('click', function(event) {
+                if (event.target.classList.contains('delete-button')) {
+                    const index = event.target.getAttribute('data-index');
+                    savedLogs.splice(index, 1);
+                    localStorage.setItem('mealLogs', JSON.stringify(savedLogs));
+                    event.target.parentElement.remove();
+                }
             });
         });
     </script>
