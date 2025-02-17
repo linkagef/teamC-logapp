@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>睡眠時間ログ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        li a {
+            text-decoration: none;
+            color: #333;
+            cursor: pointer;
+        }
+        li a:hover {
+            text-decoration: underline;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        label {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        input[type="time"],
+        input[type="date"],
+        input[type="submit"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #5cb85c;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>睡眠時間ログ</h1>
+        
+        <form id="sleep-form">
+            <label for="sleep-date">日付:</label>
+            <input type="date" id="sleep-date" name="sleep-date" required>
+
+            <label for="sleep-start">就寝時間:</label>
+            <input type="time" id="sleep-start" name="sleep-start" required>
+
+            <label for="sleep-end">起床時間:</label>
+            <input type="time" id="sleep-end" name="sleep-end" required>
+
+            <input type="submit" value="ログを保存">
+        </form>
+
+        <h2>睡眠時間</h2>
+        <p id="sleep-time">ここに睡眠時間が表示されます</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sleepForm = document.getElementById('sleep-form');
+            sleepForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const sleepDate = document.getElementById('sleep-date').value;
+                const sleepStart = document.getElementById('sleep-start').value;
+                const sleepEnd = document.getElementById('sleep-end').value;
+
+                const sleepTimeElement = document.getElementById('sleep-time');
+                sleepTimeElement.textContent = `日付: ${sleepDate}, 就寝時間: ${sleepStart}, 起床時間: ${sleepEnd}`;
+            });
+        });
+    </script>
+</body>
+</html>
