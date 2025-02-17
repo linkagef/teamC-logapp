@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体調管理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #2e8b57;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 50px;
+        }
+        .card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card a {
+            text-decoration: none;
+            color: #2e8b57;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>体調管理</h1>
+    <div class="container">
+        <div class="card">
+            <a href="/temperature.html">体温</a>
+        </div>
+        <div class="card">
+            <a href="/height.HTML">体重</a>
+        </div>
+        <div class="card">
+            <a href="/condition/management.html">睡眠時間</a>
+        </div>
+        <div class="card">
+            <a href="/condition/meal.html">食事管理</a>
+        </div>
+    </div>
+</body>
+</html>
