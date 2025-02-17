@@ -39,10 +39,28 @@
             color: #2e8b57;
             font-weight: bold;
         }
+        .back-link {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: #2e8b57;
+            font-weight: bold;
+        }
+        .date {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #2e8b57;
+        }
     </style>
 </head>
 <body>
+    <a href="javascript:history.back()" class="back-link">前のページに戻る</a>
     <h1>健康管理アプリ</h1>
+    <div class="date">
+        <script>
+            document.write(new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' }));
+        </script>
+    </div>
     <div class="container">
         <div class="card">
             <a href="/health.html">体調管理</a>
