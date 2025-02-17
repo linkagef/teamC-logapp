@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体温</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em; /* フォントサイズを大きく */
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        form {
+            background-color: #f9f9f9;
+            padding: 30px; /* パディングを大きく */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px; /* 幅を広く */
+            text-align: center;
+            margin: 10px;
+        }
+        input[type="number"], select {
+            width: 100%;
+            padding: 15px; /* パディングを大きく */
+            margin: 10px 0;
+            box-sizing: border-box;
+            font-size: 1.2em; /* フォントサイズを大きく */
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px; /* パディングを大きく */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em; /* フォントサイズを大きく */
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em; /* フォントサイズを大きく */
+            color: #333;
+        }
+        #history {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #history h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        #history table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #history th, #history td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #history th {
+            background-color: #f2f2f2;
+        }
+        .edit-button, .delete-button {
+            margin-left: 10px;
+            cursor: pointer;
+            color: blue;
+            border: none; /* ボーダーをなくす */
+            background: none; /* 背景をなくす */
+            padding: 0; /* パディングをなくす */
+        }
+        .delete-button {
+            color: red;
+        }
+        #showFormButton {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #showFormButton:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="formTitle">体温を入力してください</h1>
+    <div class="container" id="formContainer">
+        <form id="temperatureForm">
+            <label for="temperature">体温 (℃):</label>
+            <input type="number" id="temperature" name="temperature" step="0.1" min="35" max="40" required>
+            <label for="condition">体調の評価:</label>
+            <select id="condition" name="condition">
+                <option value="良好">良好</option>
+                <option value="やや良好">やや良好</option>
+                <option value="普通">普通</option>
+                <option value="やや不調">やや不調</option>
+                <option value="不調">不調</option>
+            </select>
+            <input type="submit" value="送信">
+        </form>
+    </div>
+    <button id="showFormButton">送信フォームを表示</button>
+    <div id="result"></div>
+    <div id="history">
+        <h2>履歴</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>日付</th>
+                    <th>記録</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="historyList"></tbody>
+        </table>
+        <button id="clearHistoryButton">履歴を全て削除</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const historyList = document.getElementById('historyList');
+            const storedHistory = JSON.parse(localStorage.getItem('temperatureHistory')) || [];
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+            const currentDate = new Date().toLocaleDateString('ja-JP');
+            const lastSubmitDate = localStorage.getItem('lastSubmitDate');
+
+            if (lastSubmitDate === currentDate) {
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('formTitle').style.display = 'none';
+                document.getElementById('showFormButton').style.display = 'block';
+            }
+
+            storedHistory.forEach((entry, index) => {
+                const entryDate = new Date(entry.date);
+                if (entryDate >= oneWeekAgo) {
+                    const row = document.createElement('tr');
+                    const dateCell = document.createElement('td');
+                    const resultCell = document.createElement('td');
+                    const actionCell = document.createElement('td');
+                    dateCell.innerText = entry.date;
+                    resultCell.innerText = entry.result;
+                    const editButton = document.createElement('button');
+                    editButton.innerText = '編集';
+                    editButton.classList.add('edit-button');
+                    editButton.addEventListener('click', () => editEntry(index));
+                    const deleteButton = document.createElement('button');
+                    deleteButton.innerText = '削除';
+                    deleteButton.classList.add('delete-button');
+                    deleteButton.addEventListener('click', () => deleteEntry(index));
+                    actionCell.appendChild(editButton);
+                    actionCell.appendChild(deleteButton);
+                    row.appendChild(dateCell);
+                    row.appendChild(resultCell);
+                    row.appendChild(actionCell);
+                    historyList.appendChild(row);
+                }
+            });
+
+            document.getElementById('clearHistoryButton').addEventListener('click', () => {
+                localStorage.removeItem('temperatureHistory');
+                location.reload();
+            });
+
+            document.getElementById('showFormButton').addEventListener('click', () => {
+                document.getElementById('formContainer').style.display = 'block';
+                document.getElementById('formTitle').style.display = 'block';
+                document.getElementById('showFormButton').style.display = 'none';
+            });
+        });
+
+        document.getElementById('temperatureForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const temperature = document.getElementById('temperature').value;
+            const condition = document.getElementById('condition').value;
+            const resultText = `体温 ${temperature}℃\n体調は「${condition}」でした。`;
+            document.getElementById('result').innerText = resultText;
+
+            const historyList = document.getElementById('historyList');
+            const row = document.createElement('tr');
+            const dateCell = document.createElement('td');
+            const resultCell = document.createElement('td');
+            const actionCell = document.createElement('td');
+            const currentDate = new Date().toLocaleDateString('ja-JP');
+            dateCell.innerText = currentDate;
+            resultCell.innerText = resultText.replace('\n', ' ');
+            const editButton = document.createElement('button');
+            editButton.innerText = '編集';
+            editButton.classList.add('edit-button');
+            editButton.addEventListener('click', () => editEntry(storedHistory.length));
+            const deleteButton = document.createElement('button');
+            deleteButton.innerText = '削除';
+            deleteButton.classList.add('delete-button');
+            deleteButton.addEventListener('click', () => deleteEntry(storedHistory.length));
+            actionCell.appendChild(editButton);
+            actionCell.appendChild(deleteButton);
+            row.appendChild(dateCell);
+            row.appendChild(resultCell);
+            row.appendChild(actionCell);
+            historyList.appendChild(row);
+
+            const storedHistory = JSON.parse(localStorage.getItem('temperatureHistory')) || [];
+            storedHistory.push({ date: currentDate, result: resultText.replace('\n', ' ') });
+            localStorage.setItem('temperatureHistory', JSON.stringify(storedHistory));
+            localStorage.setItem('lastSubmitDate', currentDate);
+
+            document.getElementById('formContainer').style.display = 'none';
+            document.getElementById('formTitle').style.display = 'none';
+            document.getElementById('showFormButton').style.display = 'block';
+        });
+
+        function editEntry(index) {
+            const storedHistory = JSON.parse(localStorage.getItem('temperatureHistory')) || [];
+            const entry = storedHistory[index];
+            const newTemperature = prompt('新しい体温を入力してください:', entry.result.split(' ')[1].replace('℃', ''));
+            const newCondition = prompt('新しい体調を入力してください:', entry.result.split('「')[1].replace('」でした。', ''));
+            if (newTemperature && newCondition) {
+                const newResultText = `体温 ${newTemperature}℃\n体調は「${newCondition}」でした。`;
+                storedHistory[index] = { date: entry.date, result: newResultText.replace('\n', ' ') };
+                localStorage.setItem('temperatureHistory', JSON.stringify(storedHistory));
+                location.reload();
+            }
+        }
+
+        function deleteEntry(index) {
+            const storedHistory = JSON.parse(localStorage.getItem('temperatureHistory')) || [];
+            storedHistory.splice(index, 1);
+            localStorage.setItem('temperatureHistory', JSON.stringify(storedHistory));
+            location.reload();
+        }
+    </script>
+</body>
+</html>
