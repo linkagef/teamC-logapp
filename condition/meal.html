@@ -32,6 +32,7 @@
             color: #555;
         }
         select,
+        input[type="date"],
         input[type="submit"] {
             padding: 10px;
             margin-bottom: 20px;
@@ -73,6 +74,9 @@
         <h1>食事管理ログ</h1>
         
         <form id="meal-form">
+            <label for="meal-date">日付:</label>
+            <input type="date" id="meal-date" name="meal-date" required>
+
             <label for="breakfast">朝食:</label>
             <select id="breakfast" name="breakfast">
                 <option value="あり">あり</option>
@@ -118,17 +122,14 @@
 
             mealForm.addEventListener('submit', function(event) {
                 event.preventDefault();
+                const mealDate = document.getElementById('meal-date').value;
                 const breakfast = document.getElementById('breakfast').value;
                 const lunch = document.getElementById('lunch').value;
                 const dinner = document.getElementById('dinner').value;
 
-                const now = new Date();
-                const mealDate = now.toLocaleDateString('ja-JP');
-                const mealTime = now.toLocaleTimeString('ja-JP');
-
                 const logEntry = document.createElement('div');
                 logEntry.className = 'log-entry';
-                const logText = `日付: ${mealDate}, 時間: ${mealTime}, 朝食: ${breakfast}, 昼食: ${lunch}, 夕食: ${dinner}`;
+                const logText = `日付: ${mealDate}, 朝食: ${breakfast}, 昼食: ${lunch}, 夕食: ${dinner}`;
                 logEntry.innerHTML = `
                     ${logText}
                     <button class="delete-button" data-index="${savedLogs.length}">削除</button>
