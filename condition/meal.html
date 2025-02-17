@@ -52,6 +52,20 @@
             font-size: 1.2em;
             color: #333;
         }
+        .log-entry {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .delete-button {
+            background-color: #d9534f;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #c9302c;
+        }
     </style>
 </head>
 <body>
@@ -88,18 +102,54 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const mealForm = document.getElementById('meal-form');
+            const mealLog = document.getElementById('meal-log');
+
+            // ローカルストレージからログを読み込む
+            const savedLogs = JSON.parse(localStorage.getItem('mealLogs')) || [];
+            savedLogs.forEach((log, index) => {
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.innerHTML = `
+                    ${log}
+                    <button class="delete-button" data-index="${index}">削除</button>
+                `;
+                mealLog.appendChild(logEntry);
+            });
+
             mealForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const breakfast = document.getElementById('breakfast').value;
                 const lunch = document.getElementById('lunch').value;
                 const dinner = document.getElementById('dinner').value;
 
-                const mealLogElement = document.getElementById('meal-log');
-                mealLogElement.innerHTML = `
-                    <p>朝食: ${breakfast}</p>
-                    <p>昼食: ${lunch}</p>
-                    <p>夕食: ${dinner}</p>
+                const now = new Date();
+                const mealDate = now.toLocaleDateString('ja-JP');
+                const mealTime = now.toLocaleTimeString('ja-JP');
+
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                const logText = `日付: ${mealDate}, 時間: ${mealTime}, 朝食: ${breakfast}, 昼食: ${lunch}, 夕食: ${dinner}`;
+                logEntry.innerHTML = `
+                    ${logText}
+                    <button class="delete-button" data-index="${savedLogs.length}">削除</button>
                 `;
+                mealLog.appendChild(logEntry);
+
+                // ローカルストレージに保存
+                savedLogs.push(logText);
+                localStorage.setItem('mealLogs', JSON.stringify(savedLogs));
+
+                // フォームをリセット
+                mealForm.reset();
+            });
+
+            mealLog.addEventListener('click', function(event) {
+                if (event.target.classList.contains('delete-button')) {
+                    const index = event.target.getAttribute('data-index');
+                    savedLogs.splice(index, 1);
+                    localStorage.setItem('mealLogs', JSON.stringify(savedLogs));
+                    event.target.parentElement.remove();
+                }
             });
         });
     </script>
