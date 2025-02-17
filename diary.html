@@ -54,22 +54,36 @@
         <div id="result" class="result" style="display:none;">
             <h2><p id="savedDate"></p></h2>
             <p id="savedDiary"></p>
-            
         </div>
     </div>
-
+ 
     <script>
-        document.getElementById('diaryForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var diary = document.getElementById('diary').value;
-            var currentDate = new Date().toLocaleDateString();
-            document.getElementById('savedDiary').innerText = diary;
-            document.getElementById('savedDate').innerText = '日付: ' + currentDate;
-            document.getElementById('result').style.display = 'block';
+        document.addEventListener('DOMContentLoaded', function() {
+            // ローカルストレージからデータを読み込む
+            const savedDiary = localStorage.getItem('diaryText');
+            const savedDate = localStorage.getItem('diaryDate');
+            if (savedDiary && savedDate) {
+                document.getElementById('savedDiary').innerText = savedDiary;
+                document.getElementById('savedDate').innerText = savedDate;
+                document.getElementById('result').style.display = 'block';
+            }
+ 
+            document.getElementById('diaryForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var diary = document.getElementById('diary').value;
+                var currentDate = new Date().toLocaleDateString();
+                document.getElementById('savedDiary').innerText = diary;
+                document.getElementById('savedDate').innerText = currentDate;
+                document.getElementById('result').style.display = 'block';
+ 
+                // ローカルストレージに保存
+                localStorage.setItem('diaryText', diary);
+                localStorage.setItem('diaryDate', currentDate);
+            });
+ 
+            // フォームの入力フィールドにフォーカスを設定
+            document.getElementById('diary').focus();
         });
-
-        // フォームの入力フィールドにフォーカスを設定
-        document.getElementById('diary').focus();
     </script>
 </body>
 </html>
