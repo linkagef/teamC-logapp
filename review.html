@@ -1,75 +1,118 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>振り返り</title>
-    <style>
-        body {
-            text-align: center;
-        }
-        textarea {
-            width: 70%;
-            height: 150px;
-            margin: 20px auto;
-            display: block;
-            resize: none; /* テキストエリアの大きさを固定 */
-        }
-        #submitButton, #editButton {
-            display: block;
-            width: 100px;
-            height: 40px;
-            margin: 20px auto;
-            background-color: green;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #submitButton:hover, #editButton:hover {
-            background-color: darkgreen;
-        }
-        h1 {
-            background-color: #ccffcc; /* 淡い緑色 */
-        }
-    </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const formattedDate = today.getFullYear() + '年' + (today.getMonth() + 1) + '月' + today.getDate() + '日';
-            document.getElementById('date').textContent = formattedDate;
-
-            document.getElementById('submitButton').addEventListener('click', function() {
-                const reviewText = document.getElementById('reviewText').value;
-                const improvementText = document.getElementById('improvementText').value;
-                document.getElementById('outputReview').textContent = reviewText;
-                document.getElementById('outputImprovement').textContent = improvementText;
-                document.getElementById('reviewText').style.display = 'none';
-                document.getElementById('improvementText').style.display = 'none';
-                document.getElementById('submitButton').style.display = 'none';
-                document.getElementById('editButton').style.display = 'block';
-            });
-
-            document.getElementById('editButton').addEventListener('click', function() {
-                document.getElementById('reviewText').style.display = 'block';
-                document.getElementById('improvementText').style.display = 'block';
-                document.getElementById('submitButton').style.display = 'block';
-                document.getElementById('editButton').style.display = 'none';
-            });
-        });
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>振り返り</title>
+<style>
+   body {
+       text-align: center;
+   }
+   textarea {
+       width: 70%;
+       height: 150px;
+       margin: 20px auto;
+       display: block;
+       resize: none;
+   }
+   #submitButton, #editButton {
+       display: block;
+       width: 100px;
+       height: 40px;
+       margin: 20px auto;
+       background-color: green;
+       color: white;
+       border: none;
+       border-radius: 5px;
+       font-size: 16px;
+       cursor: pointer;
+   }
+   #submitButton:hover, #editButton:hover {
+       background-color: darkgreen;
+   }
+   h1 {
+       background-color: #ccffcc;
+   }
+   #rating {
+       direction: rtl;
+       unicode-bidi: bidi-override;
+       display: inline-block;
+   }
+   #rating > input {
+       display: none;
+   }
+   #rating > label {
+       font-size: 2em;
+       color: #ddd;
+       cursor: pointer;
+   }
+   #rating > input:checked ~ label,
+   #rating > input:hover ~ label {
+       color: #f5b301;
+   }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+   const today = new Date();
+   const formattedDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+   // 昨日の日付を取得
+   const yesterday = new Date();
+   yesterday.setDate(yesterday.getDate() - 1);
+   const formattedYesterday = yesterday.getFullYear() + '-' + (yesterday.getMonth() + 1) + '-' + yesterday.getDate();
+   // 昨日立てた目標を取得
+   const savedGoal = localStorage.getItem('goal_' + formattedYesterday);
+   document.getElementById('yesterdayGoal').textContent = savedGoal ? savedGoal : "今日の目標がありません";
+   document.getElementById('date').textContent = formattedDate;
+   document.getElementById('submitButton').addEventListener('click', function() {
+       const reviewText = document.getElementById('reviewText').value;
+       const improvementText = document.getElementById('improvementText').value;
+       const goalText = document.getElementById('goalText').value;
+       const rating = document.querySelector('input[name="rating"]:checked')?.value || "未評価";
+       document.getElementById('outputReview').textContent = reviewText;
+       document.getElementById('outputImprovement').textContent = improvementText;
+       document.getElementById('outputGoal').textContent = goalText;
+       // 明日の目標を保存（今日の日付をキーにする）
+       localStorage.setItem('goal_' + formattedDate, goalText);
+       document.getElementById('reviewText').style.display = 'none';
+       document.getElementById('improvementText').style.display = 'none';
+       document.getElementById('goalText').style.display = 'none';
+       document.getElementById('submitButton').style.display = 'none';
+       document.getElementById('editButton').style.display = 'block';
+       alert('達成度: ' + rating + ' / 5');
+   });
+   document.getElementById('editButton').addEventListener('click', function() {
+       document.getElementById('reviewText').style.display = 'block';
+       document.getElementById('improvementText').style.display = 'block';
+       document.getElementById('goalText').style.display = 'block';
+       document.getElementById('submitButton').style.display = 'block';
+       document.getElementById('editButton').style.display = 'none';
+   });
+});
+</script>
 </head>
 <body>
-    <h1>振り返り</h1>
-    <p id="date"></p>
-    <h3>今日のふりかえり</h3>
-    <textarea id="reviewText" placeholder="ここに振り返りを記入してください"></textarea>
-    <p id="outputReview"></p>
-    <h3>改善点</h3>
-    <textarea id="improvementText" placeholder="ここに改善点を記入してください"></textarea>
-    <p id="outputImprovement"></p>
-    <button id="submitButton">登録</button>
-    <button id="editButton" style="display: none;">編集</button>
+<h1>振り返り</h1>
+<h3>今日の目標</h3>
+<p id="yesterdayGoal">ここに昨日の目標が表示されます</p>
+<p id="date"></p>
+<h3>達成度</h3>
+<div id="rating">
+<input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
+<input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
+<input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
+<input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
+<input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
+</div>
+<h3>今日のふりかえり</h3>
+<textarea id="reviewText" placeholder="ここに振り返りを記入してください"></textarea>
+<p id="outputReview"></p>
+<h3>改善点</h3>
+<textarea id="improvementText" placeholder="ここに改善点を記入してください"></textarea>
+<p id="outputImprovement"></p>
+<h3>明日の目標</h3>
+<textarea id="goalText" placeholder="ここに明日の目標を記入してください"></textarea>
+<p id="outputGoal"></p>
+<button id="submitButton">登録</button>
+<button id="editButton" style="display: none;">編集</button>
 </body>
 </html>
