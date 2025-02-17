@@ -49,22 +49,19 @@
         }
         input[type="time"],
         input[type="date"],
-        input[type="submit"],
-        input[type="button"] {
+        input[type="submit"] {
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        input[type="submit"],
-        input[type="button"] {
+        input[type="submit"] {
             background-color: #5cb85c;
             color: #fff;
             border: none;
             cursor: pointer;
         }
-        input[type="submit"]:hover,
-        input[type="button"]:hover {
+        input[type="submit"]:hover {
             background-color: #4cae4c;
         }
         .log-entry {
@@ -73,6 +70,13 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
+        }
+        .delete-button {
+            background-color: #d9534f;
+            margin-left: 10px;
+        }
+        .delete-button:hover {
+            background-color: #c9302c;
         }
     </style>
 </head>
@@ -91,7 +95,6 @@
             <input type="time" id="sleep-end" name="sleep-end" required>
 
             <input type="submit" value="ログを保存">
-            <input type="button" value="リセット" id="reset-button">
         </form>
 
         <h2>睡眠時間</h2>
@@ -104,14 +107,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const sleepForm = document.getElementById('sleep-form');
             const sleepLog = document.getElementById('sleep-log');
-            const resetButton = document.getElementById('reset-button');
 
             // ローカルストレージからログを読み込む
             const savedLogs = JSON.parse(localStorage.getItem('sleepLogs')) || [];
-            savedLogs.forEach(log => {
+            savedLogs.forEach((log, index) => {
                 const logEntry = document.createElement('div');
                 logEntry.className = 'log-entry';
-                logEntry.textContent = log;
+                logEntry.innerHTML = `
+                    ${log}
+                    <button class="delete-button" data-index="${index}">削除</button>
+                `;
                 sleepLog.appendChild(logEntry);
             });
 
@@ -123,22 +128,28 @@
 
                 const logEntry = document.createElement('div');
                 logEntry.className = 'log-entry';
-                logEntry.textContent = `日付: ${sleepDate}, 就寝時間: ${sleepStart}, 起床時間: ${sleepEnd}`;
+                const logText = `日付: ${sleepDate}, 就寝時間: ${sleepStart}, 起床時間: ${sleepEnd}`;
+                logEntry.innerHTML = `
+                    ${logText}
+                    <button class="delete-button" data-index="${savedLogs.length}">削除</button>
+                `;
                 sleepLog.appendChild(logEntry);
 
                 // ローカルストレージに保存
-                savedLogs.push(logEntry.textContent);
+                savedLogs.push(logText);
                 localStorage.setItem('sleepLogs', JSON.stringify(savedLogs));
 
                 // フォームをリセット
                 sleepForm.reset();
             });
 
-            resetButton.addEventListener('click', function() {
-                // ローカルストレージをクリア
-                localStorage.removeItem('sleepLogs');
-                // 表示されているログをクリア
-                sleepLog.innerHTML = '';
+            sleepLog.addEventListener('click', function(event) {
+                if (event.target.classList.contains('delete-button')) {
+                    const index = event.target.getAttribute('data-index');
+                    savedLogs.splice(index, 1);
+                    localStorage.setItem('sleepLogs', JSON.stringify(savedLogs));
+                    event.target.parentElement.remove();
+                }
             });
         });
     </script>
