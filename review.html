@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
    const yesterday = new Date();
    yesterday.setDate(yesterday.getDate() - 1);
    const formattedYesterday = yesterday.getFullYear() + '-' + (yesterday.getMonth() + 1) + '-' + yesterday.getDate();
-   // 昨日立てた目標を取得
+   // 今日の目標を取得
    const savedGoal = localStorage.getItem('goal_' + formattedYesterday);
    document.getElementById('yesterdayGoal').textContent = savedGoal ? savedGoal : "今日の目標がありません";
    document.getElementById('date').textContent = formattedDate;
@@ -104,13 +104,13 @@ document.addEventListener('DOMContentLoaded', function() {
 <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
 </div>
 <h3>今日のふりかえり</h3>
-<textarea id="reviewText" placeholder="ここに振り返りを記入してください"></textarea>
+<textarea id="reviewText" placeholder="振り返りを記入してください"></textarea>
 <p id="outputReview"></p>
 <h3>改善点</h3>
-<textarea id="improvementText" placeholder="ここに改善点を記入してください"></textarea>
+<textarea id="improvementText" placeholder="改善点を記入してください"></textarea>
 <p id="outputImprovement"></p>
 <h3>明日の目標</h3>
-<textarea id="goalText" placeholder="ここに明日の目標を記入してください"></textarea>
+<textarea id="goalText" placeholder="明日の目標を記入してください"></textarea>
 <p id="outputGoal"></p>
 <button id="submitButton">登録</button>
 <button id="editButton" style="display: none;">編集</button>
