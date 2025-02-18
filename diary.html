@@ -47,6 +47,12 @@
             color: #2e8b57;
             font-weight: bold;
         }
+        button.delete {
+            background-color: #f44336;
+        }
+        button.delete:hover {
+            background-color: #e53935;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +69,7 @@
         <div id="result" class="result" style="display:none;">
             <h2><p id="savedDate"></p></h2>
             <p id="savedDiary"></p>
+            <button type="button" class="delete" id="deleteButton">削除</button>
         </div>
     </div>
  
@@ -87,6 +94,14 @@
                 // ローカルストレージに保存
                 localStorage.setItem('diaryText', diary);
                 localStorage.setItem('diaryDate', currentDate);
+            });
+
+            document.getElementById('deleteButton').addEventListener('click', function() {
+                localStorage.removeItem('diaryText');
+                localStorage.removeItem('diaryDate');
+                document.getElementById('savedDiary').innerText = '';
+                document.getElementById('savedDate').innerText = '';
+                document.getElementById('result').style.display = 'none';
             });
  
             // フォームの入力フィールドにフォーカスを設定
