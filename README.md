@@ -1,7 +1,7 @@
-# teamC-logapp   
+# モチベーションログアプリケーション制作   
 ## [【使い方】wikiはこちら](https://github.com/linkagef/teamC-logapp/wiki)
 
-# モチベーションログアプリケーション制作   
+
 
 ## ステークホルダー  
 とある学習塾からの依頼（想定）   
