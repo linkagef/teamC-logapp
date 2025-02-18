@@ -39,6 +39,17 @@
             padding: 10px;
             border: 1px solid #ddd;
         }
+        .delete-button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 <body>
@@ -54,6 +65,7 @@
         <div id="result" class="result" style="display:none;">
             <h2><p id="savedDate"></p></h2>
             <p id="savedDiary"></p>
+            <button class="delete-button" id="deleteButton">削除</button>
         </div>
     </div>
  
@@ -83,6 +95,15 @@
  
             // フォームの入力フィールドにフォーカスを設定
             document.getElementById('diary').focus();
+
+            // 削除ボタンのイベントリスナー
+            document.getElementById('deleteButton').addEventListener('click', function() {
+                localStorage.removeItem('diaryText');
+                localStorage.removeItem('diaryDate');
+                document.getElementById('savedDiary').innerText = '';
+                document.getElementById('savedDate').innerText = '';
+                document.getElementById('result').style.display = 'none';
+            });
         });
     </script>
 </body>
