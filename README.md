@@ -1,4 +1,6 @@
 # teamC-logapp   
+## [【使い方】wikiはこちら](https://github.com/linkagef/teamC-logapp.wiki.git)
+
 ## 使用言語
 ![Static Badge](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white&logoSize=auto)
 ![Static Badge](https://img.shields.io/badge/CSS-%23663399?style=for-the-badge&logo=css&logoColor=white&logoSize=auto)
