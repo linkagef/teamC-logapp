@@ -107,9 +107,17 @@
         #showFormButton:hover {
             background-color: #45a049;
         }
+        .back-link {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: #2e8b57;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    <a href="javascript:history.back()" class="back-link">前のページに戻る</a>
     <h1 id="formTitle">体温を入力してください</h1>
     <div class="container" id="formContainer">
         <form id="temperatureForm">

@@ -30,9 +30,6 @@
    #submitButton:hover, #editButton:hover {
        background-color: darkgreen;
    }
-   h1 {
-       background-color: #ccffcc;
-   }
    #rating {
        direction: rtl;
        unicode-bidi: bidi-override;
@@ -50,6 +47,13 @@
    #rating > input:hover ~ label {
        color: #f5b301;
    }
+   .back-link {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: #2e8b57;
+            font-weight: bold;
+        }
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -91,6 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </head>
 <body>
+<a href="javascript:history.back()" class="back-link">前のページに戻る</a>
 <h1>振り返り</h1>
 <h3>今日の目標</h3>
 <p id="yesterdayGoal">ここに昨日の目標が表示されます</p>
