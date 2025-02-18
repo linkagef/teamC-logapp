@@ -39,6 +39,14 @@
             padding: 10px;
             border: 1px solid #ddd;
         }
+        .calendar {
+            margin-top: 20px;
+        }
+        .calendar button {
+            padding: 5px;
+            margin: 2px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -55,6 +63,7 @@
             <h2><p id="savedDate"></p></h2>
             <p id="savedDiary"></p>
         </div>
+        <div class="calendar" id="calendar"></div>
     </div>
  
     <script>
@@ -67,7 +76,7 @@
                 document.getElementById('savedDate').innerText = savedDate;
                 document.getElementById('result').style.display = 'block';
             }
- 
+
             document.getElementById('diaryForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 var diary = document.getElementById('diary').value;
@@ -79,8 +88,31 @@
                 // ローカルストレージに保存
                 localStorage.setItem('diaryText', diary);
                 localStorage.setItem('diaryDate', currentDate);
+
+                // カレンダーを更新
+                updateCalendar();
             });
- 
+
+            // カレンダーを生成
+            function updateCalendar() {
+                const calendar = document.getElementById('calendar');
+                calendar.innerHTML = '';
+                const diaryEntries = JSON.parse(localStorage.getItem('diaryEntries')) || {};
+                for (const date in diaryEntries) {
+                    const button = document.createElement('button');
+                    button.innerText = date;
+                    button.addEventListener('click', function() {
+                        document.getElementById('savedDiary').innerText = diaryEntries[date];
+                        document.getElementById('savedDate').innerText = date;
+                        document.getElementById('result').style.display = 'block';
+                    });
+                    calendar.appendChild(button);
+                }
+            }
+
+            // 初期カレンダーを表示
+            updateCalendar();
+
             // フォームの入力フィールドにフォーカスを設定
             document.getElementById('diary').focus();
         });
