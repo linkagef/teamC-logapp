@@ -13,6 +13,7 @@
             margin: 0;
             font-family: Arial, sans-serif;
             flex-direction: column;
+            background-color: #f0f8ff;
         }
         h1 {
             margin-bottom: 20px;
@@ -32,7 +33,7 @@
             text-align: center;
             margin: 10px;
         }
-        input[type="number"], select {
+        input[type="number"], select, textarea {
             width: 100%;
             padding: 15px; /* パディングを大きく */
             margin: 10px 0;
@@ -107,9 +108,17 @@
         #showFormButton:hover {
             background-color: #45a049;
         }
+        .back-link {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            color: #2e8b57;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
+    <a href="javascript:history.back()" class="back-link">前のページに戻る</a>
     <h1 id="formTitle">体温を入力してください</h1>
     <div class="container" id="formContainer">
         <form id="temperatureForm">
@@ -123,6 +132,17 @@
                 <option value="やや不調">やや不調</option>
                 <option value="不調">不調</option>
             </select>
+            <div id="additionalInfo" style="display: none;">
+                <label for="symptoms">症状:</label>
+                <input type="text" id="symptoms" name="symptoms"><br>
+                <label for="hospitalVisit">病院に行きましたか？</label><br>
+                <select id="hospitalVisit" name="hospitalVisit">
+                    <option value="はい">はい</option>
+                    <option value="いいえ">いいえ</option>
+                </select>
+                <label for="remarks">備考:</label>
+                <textarea id="remarks" name="remarks" rows="3"></textarea>
+            </div>
             <input type="submit" value="送信">
         </form>
     </div>
@@ -195,13 +215,30 @@
                 document.getElementById('formTitle').style.display = 'block';
                 document.getElementById('showFormButton').style.display = 'none';
             });
+
+            const conditionSelect = document.getElementById('condition');
+            const additionalInfo = document.getElementById('additionalInfo');
+
+            conditionSelect.addEventListener('change', () => {
+                if (conditionSelect.value === 'やや不調' || conditionSelect.value === '不調') {
+                    additionalInfo.style.display = 'block';
+                } else {
+                    additionalInfo.style.display = 'none';
+                }
+            });
         });
 
         document.getElementById('temperatureForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const temperature = document.getElementById('temperature').value;
             const condition = document.getElementById('condition').value;
-            const resultText = `体温 ${temperature}℃\n体調は「${condition}」でした。`;
+            const symptoms = document.getElementById('symptoms').value;
+            const hospitalVisit = document.getElementById('hospitalVisit').value;
+            const remarks = document.getElementById('remarks').value;
+            let resultText = `体温 ${temperature}℃\n体調は「${condition}」でした。`;
+            if (condition === 'やや不調' || condition === '不調') {
+                resultText += `\n症状: ${symptoms}\n病院に行った: ${hospitalVisit}\n備考: ${remarks}`;
+            }
             document.getElementById('result').innerText = resultText;
 
             const historyList = document.getElementById('historyList');
